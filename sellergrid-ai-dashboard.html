@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SellerGrid AI</title>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+body {
+    margin: 0;
+    font-family: 'Segoe UI';
+    background: #0f172a;
+    color: white;
+}
+
+header, footer {
+    text-align: center;
+    padding: 15px;
+    background: #020617;
+    font-weight: bold;
+}
+
+footer {
+    margin-top: 20px;
+    font-size: 14px;
+}
+
+.sidebar {
+    width: 200px;
+    background: #020617;
+    height: 100vh;
+    position: fixed;
+    padding: 20px;
+}
+
+.main {
+    margin-left: 220px;
+    padding: 20px;
+}
+
+.card {
+    background: rgba(255,255,255,0.05);
+    padding: 15px;
+    border-radius: 12px;
+    margin: 10px 0;
+}
+
+.review {
+    padding: 10px;
+    border-radius: 10px;
+    margin-top: 10px;
+}
+
+.positive { background: rgba(34,197,94,0.2); }
+.negative { background: rgba(239,68,68,0.2); }
+
+input, select {
+    padding: 8px;
+    margin: 5px;
+    border-radius: 6px;
+    border: none;
+}
+
+</style>
+</head>
+
+<body>
+
+<header>🚀 SellerGrid AI – Review Intelligence</header>
+
+<div class="sidebar">
+    <p>Dashboard</p>
+    <p>Reviews</p>
+    <p>Analytics</p>
+    <p>Settings</p>
+</div>
+
+<div class="main">
+
+<h2>📊 Dashboard</h2>
+
+<div class="card">
+    <canvas id="chart"></canvas>
+</div>
+
+<div class="card">
+    <h3>🔍 Filters</h3>
+    <select id="platform">
+        <option value="all">All Platforms</option>
+        <option value="Amazon">Amazon</option>
+        <option value="Flipkart">Flipkart</option>
+    </select>
+
+    <select id="rating">
+        <option value="all">All Ratings</option>
+        <option value="5">5 Star</option>
+        <option value="1">1 Star</option>
+    </select>
+
+    <input type="text" id="search" placeholder="Search reviews...">
+</div>
+
+<div class="card">
+    <h3>💬 Reviews</h3>
+    <div id="reviews"></div>
+</div>
+
+</div>
+
+<footer>© 2026 SellerGrid AI. All rights reserved.</footer>
+
+<script>
+
+// Chart
+new Chart(document.getElementById("chart"), {
+    type: 'pie',
+    data: {
+        labels: ['Positive','Negative','Neutral'],
+        datasets: [{
+            data: [8200,2100,2130]
+        }]
+    }
+});
+
+// Fake data
+const platforms = ["Amazon", "Flipkart"];
+const texts = ["Great product", "Bad quality", "Average experience", "Fast delivery", "Packaging issue"];
+
+let allReviews = [];
+
+for(let i=0; i<100; i++){
+    let rating = Math.ceil(Math.random()*5);
+    allReviews.push({
+        platform: platforms[Math.floor(Math.random()*2)],
+        rating: rating,
+        text: texts[Math.floor(Math.random()*texts.length)]
+    });
+}
+
+// Render
+function renderReviews(){
+    let container = document.getElementById("reviews");
+    container.innerHTML = "";
+
+    let platformFilter = document.getElementById("platform").value;
+    let ratingFilter = document.getElementById("rating").value;
+    let search = document.getElementById("search").value.toLowerCase();
+
+    allReviews.forEach(r => {
+
+        if(platformFilter !== "all" && r.platform !== platformFilter) return;
+        if(ratingFilter !== "all" && r.rating != ratingFilter) return;
+        if(!r.text.toLowerCase().includes(search)) return;
+
+        let div = document.createElement("div");
+        div.className = "review " + (r.rating >=4 ? "positive" : r.rating <=2 ? "negative" : "");
+
+        div.innerHTML = `⭐${r.rating} ${r.platform} - ${r.text}`;
+        container.appendChild(div);
+    });
+}
+
+// Events
+document.getElementById("platform").onchange = renderReviews;
+document.getElementById("rating").onchange = renderReviews;
+document.getElementById("search").oninput = renderReviews;
+
+// Initial render
+renderReviews();
+
+</script>
+
+</body>
+</html>
