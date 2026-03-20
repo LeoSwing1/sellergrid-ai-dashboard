@@ -12,33 +12,38 @@
 
 <body>
 
-<!-- HEADER -->
-<header>
-    <div class="menu-btn" onclick="toggleMenu()">☰</div>
+<!-- LOADER -->
+<div id="loader">
+    <div class="spinner"></div>
+</div>
 
-    <div class="header-center">
-        🚀 SellerGrid AI – Review Intelligence
+<!-- HEADER -->
+<header class="header">
+    <div class="left">
+        <div class="menu-btn" onclick="toggleMenu()">☰</div>
     </div>
 
-    <div class="header-search">
-        <input id="headerSearch" placeholder="Search reviews...">
+    <div class="center">
+        🚀 SellerGrid AI
+    </div>
 
+    <div class="right">
+        <input id="headerSearch" placeholder="Search...">
         <div class="tags">
             <span onclick="applyTag('Amazon')">Amazon</span>
             <span onclick="applyTag('Flipkart')">Flipkart</span>
             <span onclick="applyTag('positive')">Positive</span>
             <span onclick="applyTag('negative')">Negative</span>
-            <span onclick="clearTags()">Reset</span>
         </div>
     </div>
 </header>
 
 <!-- SIDEBAR -->
 <div class="sidebar" id="sidebar">
-    <p onclick="show('dashboard')">Dashboard</p>
-    <p onclick="show('reviews')">Reviews</p>
-    <p onclick="show('ai')">AI Tools</p>
-    <p onclick="show('pricing')">Pricing</p>
+    <p onclick="show('dashboard')">📊 Dashboard</p>
+    <p onclick="show('reviews')">💬 Reviews</p>
+    <p onclick="show('ai')">🤖 AI Tools</p>
+    <p onclick="show('pricing')">💰 Pricing</p>
 </div>
 
 <!-- MAIN -->
@@ -46,52 +51,127 @@
 
 <!-- DASHBOARD -->
 <div id="dashboard" class="section active">
-<h2>📊 Dashboard</h2>
 
-<div class="grid">
-    <div class="card">Total <h2>12430</h2></div>
-    <div class="card">Positive <h2>8200</h2></div>
-    <div class="card">Negative <h2>2100</h2></div>
-    <div class="card">Neutral <h2>2130</h2></div>
+<h2>📊 Dashboard</h2>
+<p class="section-sub">Track review sentiment and performance insights.</p>
+
+<!-- ALERT -->
+<div id="alertBox" class="card" style="display:none; border:1px solid #ef4444;">
+    ⚠ High negative reviews detected!
 </div>
 
+<!-- KPI -->
+<div class="grid">
+<div class="card kpi"><div class="kpi-title">Total</div><h2>12430</h2></div>
+<div class="card kpi positive-card"><div class="kpi-title">Positive</div><h2>8200</h2></div>
+<div class="card kpi negative-card"><div class="kpi-title">Negative</div><h2>2100</h2></div>
+<div class="card kpi"><div class="kpi-title">Neutral</div><h2>2130</h2></div>
+</div>
+
+<!-- EXPORT -->
+<button class="export-btn" onclick="goToExport()">⬇ Export Data</button>
+
+<!-- 🔥 NEW COMPACT CHART -->
 <div class="card chart-card">
 
-    <div class="chart-container">
+    <!-- LEFT: SMALL GRAPH -->
+    <div class="chart-left">
         <canvas id="chart"></canvas>
     </div>
 
-    <div class="chart-details">
-        <h3>Insights</h3>
-        <p id="posText"></p>
-        <p id="negText"></p>
-        <p id="neuText"></p>
+    <!-- RIGHT: INSIGHTS -->
+    <div class="chart-right">
+        <h3>📊 Insights</h3>
+
+        <div class="insight positive">
+            👍 Positive <span id="posText"></span>
+        </div>
+
+        <div class="insight negative">
+            👎 Negative <span id="negText"></span>
+        </div>
+
+        <div class="insight neutral">
+            😐 Neutral <span id="neuText"></span>
+        </div>
+
+        <hr>
         <p id="totalText"></p>
     </div>
 
 </div>
 
+<!-- TREND GRAPH -->
+<div class="card trend-card">
+
+    <!-- LEFT: SMALL GRAPH -->
+    <div class="trend-left">
+        <canvas id="trendChart"></canvas>
+    </div>
+
+    <!-- RIGHT: DETAILS -->
+    <div class="trend-right">
+
+        <h3>📈 Weekly Trend</h3>
+
+        <p>Total Reviews: <b id="trendTotal"></b></p>
+        <p>Growth: <b id="trendGrowth"></b></p>
+
+        <div class="trend-bars">
+            <div class="bar">
+                <span>Positive</span>
+                <div class="progress"><div id="trendPos"></div></div>
+            </div>
+
+            <div class="bar">
+                <span>Negative</span>
+                <div class="progress"><div id="trendNeg"></div></div>
+            </div>
+        </div>
+
+    </div>
+
 </div>
+<!-- PLATFORM STATS -->
+<div class="grid">
+<div class="card stat-card"><h3>🛒 Amazon</h3><p>6200 reviews</p></div>
+<div class="card stat-card"><h3>📦 Flipkart</h3><p>6230 reviews</p></div>
+<div class="card stat-card"><h3>⚠ Top Issues</h3><p>Delivery, Packaging</p></div>
+</div>
+
+<!-- TIMELINE -->
+<div class="card">
+<h3>📅 Recent Activity</h3>
+<div class="timeline">
+<div>✔ New positive review</div>
+<div>⚠ Negative spike</div>
+<div>📊 Weekly report</div>
+</div>
+</div>
+
+</div> <!-- dashboard end -->
+
 
 <!-- REVIEWS -->
 <div id="reviews" class="section">
+
 <h2>💬 Reviews</h2>
 
 <div class="card">
 
 <select id="platform">
-<option value="all">All Platforms</option>
+<option value="all">All</option>
 <option>Amazon</option>
 <option>Flipkart</option>
 </select>
 
 <select id="rating">
-<option value="all">All Ratings</option>
-<option value="5">5 Star</option>
-<option value="1">1 Star</option>
+<option value="all">All</option>
+<option value="5">5</option>
+<option value="1">1</option>
 </select>
 
-<input id="search" placeholder="Search...">
+<input id="search" placeholder="Search">
 
 <br>
 
@@ -99,12 +179,12 @@
 <button onclick="setFilter('positive')">Positive</button>
 <button onclick="setFilter('negative')">Negative</button>
 
-<button onclick="downloadCSV()">Download CSV</button>
+<button onclick="downloadCSV()">⬇ Download Filtered Data</button>
 
 <div class="controls">
-    <button onclick="prevPage()">⬅ Prev</button>
-    <button onclick="nextPage()">Next ➡</button>
-    <button onclick="loadMore()">Load More</button>
+<button onclick="prevPage()">⬅ Prev</button>
+<button onclick="nextPage()">Next ➡</button>
+<button onclick="loadMore()">Load More</button>
 </div>
 
 <div id="countText"></div>
@@ -115,35 +195,45 @@
 
 </div>
 
+
 <!-- AI -->
 <div id="ai" class="section">
-<h2>🤖 AI Reply Generator</h2>
+<h2>🤖 AI Reply</h2>
 
 <div class="card">
-<textarea id="input" rows="3" placeholder="Paste review..."></textarea><br>
+<textarea id="input"></textarea>
 <button onclick="reply()">Generate</button>
 <p id="output"></p>
 </div>
 
 </div>
 
+
 <!-- PRICING -->
 <div id="pricing" class="section">
 <h2>💰 Pricing</h2>
 
-<div class="card">
-<p>Starter – ₹999/month</p>
-<p>Pro – ₹2999/month</p>
-<p>Enterprise – Custom Pricing</p>
+<div class="grid">
+<div class="card"><h3>Starter</h3><p>₹999</p></div>
+<div class="card"><h3>Pro</h3><p>₹2999</p></div>
+<div class="card"><h3>Enterprise</h3><p>Custom</p></div>
 </div>
 
 </div>
 
+</div>
+
+<!-- MODAL -->
+<div id="modal" class="modal">
+    <div class="modal-content">
+        <span onclick="closeModal()" class="close">✖</span>
+        <div id="modalBody"></div>
+    </div>
 </div>
 
 <!-- FOOTER -->
 <footer>
-© 2026 SellerGrid AI. All rights reserved.
+© 2026 SellerGrid AI
 </footer>
 
 <script src="script.js"></script>
