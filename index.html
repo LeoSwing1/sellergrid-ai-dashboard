@@ -5,141 +5,43 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SellerGrid AI</title>
 
+<link rel="stylesheet" href="style.css">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-<style>
-*{margin:0;padding:0;box-sizing:border-box;}
-body{
-    font-family:'Inter',sans-serif;
-    background:linear-gradient(135deg,#0f172a,#1e293b);
-    color:#e2e8f0;
-}
-
-/* HEADER */
-header{
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    padding:18px;
-    font-size:20px;
-    font-weight:600;
-    background:rgba(255,255,255,0.05);
-    backdrop-filter:blur(10px);
-    position:relative;
-}
-.menu-btn{
-    position:absolute;
-    left:20px;
-    font-size:22px;
-    cursor:pointer;
-}
-
-/* SIDEBAR */
-.sidebar{
-    width:240px;
-    height:100vh;
-    background:rgba(15,23,42,0.95);
-    position:fixed;
-    left:-240px;
-    top:0;
-    padding:25px;
-    transition:0.3s;
-}
-.sidebar.active{left:0;}
-.sidebar p{
-    padding:12px;
-    margin:8px 0;
-    border-radius:10px;
-    cursor:pointer;
-}
-.sidebar p:hover{background:rgba(59,130,246,0.2);}
-
-/* MAIN */
-.main{
-    padding:25px;
-    transition:margin-left 0.3s;
-}
-.main.shift{margin-left:240px;}
-
-/* CARD */
-.card{
-    background:rgba(255,255,255,0.05);
-    backdrop-filter:blur(15px);
-    border-radius:15px;
-    padding:20px;
-    margin:15px 0;
-}
-
-/* GRID */
-.grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
-    gap:15px;
-}
-
-/* BUTTON */
-button{
-    background:linear-gradient(135deg,#3b82f6,#6366f1);
-    border:none;
-    padding:10px 15px;
-    border-radius:10px;
-    color:white;
-    cursor:pointer;
-}
-button:hover{opacity:0.9;}
-
-/* INPUT */
-input,select,textarea{
-    padding:10px;
-    border-radius:10px;
-    border:none;
-    margin:5px;
-    background:rgba(255,255,255,0.08);
-    color:white;
-}
-
-/* REVIEWS */
-.review{
-    padding:12px;
-    border-radius:12px;
-    margin-top:10px;
-}
-.positive{background:rgba(34,197,94,0.15);}
-.negative{background:rgba(239,68,68,0.15);}
-
-/* SECTIONS */
-.section{display:none;}
-.active{display:block;}
-
-/* FOOTER */
-footer{
-    text-align:center;
-    padding:15px;
-    opacity:0.7;
-}
-
-/* MOBILE */
-@media(max-width:768px){
-    .main.shift{margin-left:0;}
-}
-</style>
 </head>
 
 <body>
 
+<!-- HEADER -->
 <header>
-<div class="menu-btn" onclick="toggleMenu()">☰</div>
-🚀 SellerGrid AI – Review Intelligence
+    <div class="menu-btn" onclick="toggleMenu()">☰</div>
+
+    <div class="header-center">
+        🚀 SellerGrid AI – Review Intelligence
+    </div>
+
+    <div class="header-search">
+        <input id="headerSearch" placeholder="Search reviews...">
+
+        <div class="tags">
+            <span onclick="applyTag('Amazon')">Amazon</span>
+            <span onclick="applyTag('Flipkart')">Flipkart</span>
+            <span onclick="applyTag('positive')">Positive</span>
+            <span onclick="applyTag('negative')">Negative</span>
+            <span onclick="clearTags()">Reset</span>
+        </div>
+    </div>
 </header>
 
+<!-- SIDEBAR -->
 <div class="sidebar" id="sidebar">
-<p onclick="show('dashboard')">Dashboard</p>
-<p onclick="show('reviews')">Reviews</p>
-<p onclick="show('ai')">AI Tools</p>
-<p onclick="show('pricing')">Pricing</p>
+    <p onclick="show('dashboard')">Dashboard</p>
+    <p onclick="show('reviews')">Reviews</p>
+    <p onclick="show('ai')">AI Tools</p>
+    <p onclick="show('pricing')">Pricing</p>
 </div>
 
+<!-- MAIN -->
 <div class="main" id="main">
 
 <!-- DASHBOARD -->
@@ -147,15 +49,28 @@ footer{
 <h2>📊 Dashboard</h2>
 
 <div class="grid">
-<div class="card">Total <h2>12430</h2></div>
-<div class="card">Positive <h2>8200</h2></div>
-<div class="card">Negative <h2>2100</h2></div>
-<div class="card">Neutral <h2>2130</h2></div>
+    <div class="card">Total <h2>12430</h2></div>
+    <div class="card">Positive <h2>8200</h2></div>
+    <div class="card">Negative <h2>2100</h2></div>
+    <div class="card">Neutral <h2>2130</h2></div>
 </div>
 
-<div class="card">
-<canvas id="chart"></canvas>
+<div class="card chart-card">
+
+    <div class="chart-container">
+        <canvas id="chart"></canvas>
+    </div>
+
+    <div class="chart-details">
+        <h3>Insights</h3>
+        <p id="posText"></p>
+        <p id="negText"></p>
+        <p id="neuText"></p>
+        <p id="totalText"></p>
+    </div>
+
 </div>
+
 </div>
 
 <!-- REVIEWS -->
@@ -163,6 +78,7 @@ footer{
 <h2>💬 Reviews</h2>
 
 <div class="card">
+
 <select id="platform">
 <option value="all">All Platforms</option>
 <option>Amazon</option>
@@ -185,174 +101,52 @@ footer{
 
 <button onclick="downloadCSV()">Download CSV</button>
 
-<div style="margin-top:10px;">
-<button onclick="prevPage()">⬅ Prev</button>
-<button onclick="nextPage()">Next ➡</button>
-<button onclick="loadMore()">Load More</button>
+<div class="controls">
+    <button onclick="prevPage()">⬅ Prev</button>
+    <button onclick="nextPage()">Next ➡</button>
+    <button onclick="loadMore()">Load More</button>
 </div>
 
-<div style="margin-top:10px;">
-<span id="countText"></span>
-</div>
+<div id="countText"></div>
+
 </div>
 
 <div class="card" id="reviewList"></div>
+
 </div>
 
 <!-- AI -->
 <div id="ai" class="section">
-<h2>🤖 AI Reply</h2>
+<h2>🤖 AI Reply Generator</h2>
+
 <div class="card">
-<textarea id="input" rows="3"></textarea><br>
+<textarea id="input" rows="3" placeholder="Paste review..."></textarea><br>
 <button onclick="reply()">Generate</button>
 <p id="output"></p>
 </div>
+
 </div>
 
 <!-- PRICING -->
 <div id="pricing" class="section">
 <h2>💰 Pricing</h2>
+
 <div class="card">
-<p>Starter – ₹999</p>
-<p>Pro – ₹2999</p>
-<p>Enterprise – Custom</p>
-</div>
-</div>
-
+<p>Starter – ₹999/month</p>
+<p>Pro – ₹2999/month</p>
+<p>Enterprise – Custom Pricing</p>
 </div>
 
-<footer>© 2026 SellerGrid AI. All rights reserved.</footer>
+</div>
 
-<script>
+</div>
 
-// NAV
-function toggleMenu(){
-sidebar.classList.toggle("active");
-main.classList.toggle("shift");
-}
-function show(id){
-document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
-document.getElementById(id).classList.add("active");
-}
+<!-- FOOTER -->
+<footer>
+© 2026 SellerGrid AI. All rights reserved.
+</footer>
 
-// CHART
-new Chart(document.getElementById("chart"),{
-type:'pie',
-data:{labels:['Positive','Negative','Neutral'],
-datasets:[{data:[8200,2100,2130]}]}
-});
-
-// DATA
-const names=["Rahul","Amit","Priya","Sneha","Karan"];
-const platforms=["Amazon","Flipkart"];
-const texts=["Great product","Bad quality","Average","Fast delivery","Packaging issue"];
-
-let data=[];
-for(let i=0;i<100;i++){
-data.push({
-name:names[Math.floor(Math.random()*names.length)],
-email:"user"+i+"@gmail.com",
-platform:platforms[Math.floor(Math.random()*2)],
-rating:Math.ceil(Math.random()*5),
-text:texts[Math.floor(Math.random()*texts.length)]
-});
-}
-
-// FILTER STATE
-let sentimentFilter="all";
-let currentPage=1;
-let perPage=20;
-
-// FILTER
-function filtered(){
-return data.filter(x=>{
-if(platform.value!="all"&&x.platform!=platform.value)return false;
-if(rating.value!="all"&&x.rating!=rating.value)return false;
-if(!x.text.toLowerCase().includes(search.value.toLowerCase()))return false;
-if(sentimentFilter==="positive"&&x.rating<4)return false;
-if(sentimentFilter==="negative"&&x.rating>2)return false;
-return true;
-});
-}
-
-// SET SENTIMENT
-function setFilter(type){
-sentimentFilter=type;
-reset();
-}
-
-// RENDER
-function render(){
-reviewList.innerHTML="";
-
-let list=filtered();
-
-// counters
-let total=list.length;
-let pos=list.filter(x=>x.rating>=4).length;
-let neg=list.filter(x=>x.rating<=2).length;
-
-countText.innerText=`Showing ${total} reviews | 👍 ${pos} | 👎 ${neg}`;
-
-// pagination + load more
-let end=currentPage*perPage;
-let pageData=list.slice(0,end);
-
-pageData.forEach(x=>{
-let d=document.createElement("div");
-d.className="review "+(x.rating>=4?"positive":x.rating<=2?"negative":"");
-d.innerHTML=`<b>${x.name}</b> (${x.email})<br>⭐${x.rating} ${x.platform}<br>${x.text}`;
-reviewList.appendChild(d);
-});
-}
-
-// PAGINATION
-function nextPage(){
-currentPage++;
-render();
-}
-function prevPage(){
-if(currentPage>1){currentPage--;render();}
-}
-function loadMore(){
-perPage+=20;
-render();
-}
-
-// RESET
-function reset(){
-currentPage=1;
-perPage=20;
-render();
-}
-
-// CSV
-function downloadCSV(){
-let csv="Name,Email,Platform,Rating,Review\n";
-filtered().forEach(x=>{
-csv+=`${x.name},${x.email},${x.platform},${x.rating},${x.text}\n`;
-});
-let blob=new Blob([csv]);
-let a=document.createElement("a");
-a.href=URL.createObjectURL(blob);
-a.download="reviews.csv";
-a.click();
-}
-
-// AI
-function reply(){
-output.innerText="Thank you for your feedback. We will improve our service.";
-}
-
-// EVENTS
-platform.onchange=reset;
-rating.onchange=reset;
-search.oninput=reset;
-
-// INIT
-render();
-
-</script>
+<script src="script.js"></script>
 
 </body>
 </html>
